@@ -89,3 +89,19 @@ $(document).ready(function () {
   addTaskButton.on("click", handleAddTask);
   renderTaskList();
 });
+$(document).ready(function () {
+  let addTaskButton = $("#add-task-button");
+  addTaskButton.on("click", handleAddTask);
+  renderTaskList();
+});
+$(document).ready(function () {
+  $(".card").draggable({
+    revert: true,
+  });
+  $(".card-container").droppable({
+    accept: ".card",
+    drop: function (event, ui) {
+      $(this).append(ui.draggable);
+    },
+  });
+});
