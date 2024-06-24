@@ -40,6 +40,7 @@ function createTaskCard(task) {
         <h5 class="card-title">${task.title}</h5>
         <p class="card-text">${task.description}</p>
         <p class="card-text">${task.dueDate}</p>
+        <button type="button" class="delete-task" data-id="${task.id}">X</button>
       </div>
     </div>
     `;
@@ -78,7 +79,23 @@ function handleAddTask(event) {
 }
 
 // Todo: create a function to handle deleting a task
-function handleDeleteTask(event) {}
+function handleDeleteTask(event) {
+  let taskId = $(event.target).data("id");
+  for (let index = 0; index < taskList.length; index++) {
+    if (taskList[index].id == taskId) {
+      taskList.splice(index, 1);
+    }
+  }
+  localStorage.setItem("tasks", JSON.stringify(taskList));
+  localStorage.setItem("nextId", JSON.stringify(nextId));
+  renderTaskList();
+}
+// Add event listener to delete button
+$(document).ready(function () {
+  let deleteTaskButton = $(".delete-task");
+  deleteTaskButton.on("click", handleDeleteTask);
+  renderTaskList();
+});
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {}
