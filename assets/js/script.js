@@ -40,7 +40,7 @@ function createTaskCard(task) {
         <h5 class="card-title">${task.title}</h5>
         <p class="card-text">${task.description}</p>
         <p class="card-text">${task.dueDate}</p>
-        <button type="button" class="delete-task" data-id="${task.id}">X</button>
+        <button type="button" class="delete-task" data-id="${task.id}">Delete</button>
       </div>
     </div>
     `;
@@ -81,6 +81,7 @@ function handleAddTask(event) {
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event) {
   let taskId = $(event.target).data("id");
+  console.log(taskId);
   for (let index = 0; index < taskList.length; index++) {
     if (taskList[index].id == taskId) {
       taskList.splice(index, 1);
@@ -91,21 +92,15 @@ function handleDeleteTask(event) {
   renderTaskList();
 }
 // Add event listener to delete button
-$(document).ready(function () {
-  let deleteTaskButton = $(".delete-task");
-  deleteTaskButton.on("click", handleDeleteTask);
-  renderTaskList();
+$(document).on("click", ".delete-task", function (event) {
+  console.log("Task deleted");
+  handleDeleteTask(event);
 });
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {}
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
-$(document).ready(function () {
-  let addTaskButton = $("#add-task-button");
-  addTaskButton.on("click", handleAddTask);
-  renderTaskList();
-});
 $(document).ready(function () {
   let addTaskButton = $("#add-task-button");
   addTaskButton.on("click", handleAddTask);
