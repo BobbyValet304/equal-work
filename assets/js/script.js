@@ -2,6 +2,18 @@
 let taskList = JSON.parse(localStorage.getItem("tasks")) || [];
 let nextId = JSON.parse(localStorage.getItem("nextId")) || 0;
 
+// Find the task with the given taskId
+let taskToUpdate = taskList.find((task) => task.id === parseInt(taskId));
+
+if (taskToUpdate) {
+  // Update the task's status
+  taskToUpdate.status = newLaneId;
+
+  // Save the updated task list back to local storage
+  localStorage.setItem("tasks", JSON.stringify(taskList));
+} else {
+  console.error("Task not found:", taskId);
+}
 function saveTask(task) {
   // Todo: save the new task object to localStorage
   taskList.push(task);
@@ -53,6 +65,10 @@ function renderTaskList() {
     //console.log(taskList[index]);
     const createCard = createTaskCard(taskList[index]);
     //console.log(createCard);
+    $(".card").draggable({
+      revert: "invalid",
+      helper: "clone",
+    });
     $("#todo-cards").append(createCard);
   }
 }
@@ -75,6 +91,10 @@ function handleAddTask(event) {
   taskTitleInput.val("");
   taskDateInput.val("");
   taskDescriptionInput.val("");
+  $("#newly-added-task").draggable({
+    revert: "invalid",
+    helper: "clone",
+  });
   saveTask(newTask);
 }
 
@@ -102,6 +122,14 @@ $(document).on("click", ".delete-task", function (event) {
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
+  let droppedTaskId = ui.draggable.attr("id");
+  let newLaneId = $(this).attr("id");
+
+  // Update the task's status in the DOM
+  ui.draggable.appendTo($(this));
+
+  // Update the task's status in your data structure (e.g., local storage)
+  updateTaskStatus(droppedTaskId, newLaneId);
   // Implement the functionality for dropping tasks into new status lane
 }
 
@@ -114,11 +142,11 @@ $(document).ready(function () {
   // Make cards draggable using jQuery UI draggable method
   $(".card").draggable({
     revert: "invalid",
-    helper: "clone",
+    helper: "original",
   });
 
   // Make lanes droppable and handle dropping tasks
-  $(".lane").droppable({
+  $(".card-container").droppable({
     accept: ".card",
     drop: function (event, ui) {
       handleDrop(event, ui);
