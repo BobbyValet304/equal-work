@@ -91,29 +91,37 @@ function handleDeleteTask(event) {
   localStorage.setItem("nextId", JSON.stringify(nextId));
   renderTaskList();
 }
-// Add event listener to delete button
+//Add event listener to delete button
 $(document).on("click", ".delete-task", function (event) {
+  event.preventDefault();
+  event.stopPropagation();
   console.log("Task deleted");
+  // Call the function handleDeleteTask if defined
   handleDeleteTask(event);
 });
 
 // Todo: create a function to handle dropping a task into a new status lane
-function handleDrop(event, ui) {}
+function handleDrop(event, ui) {
+  // Implement the functionality for dropping tasks into new status lane
+}
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
   let addTaskButton = $("#add-task-button");
   addTaskButton.on("click", handleAddTask);
   renderTaskList();
-});
-$(document).ready(function () {
+
+  // Make cards draggable using jQuery UI draggable method
   $(".card").draggable({
-    revert: true,
+    revert: "invalid",
+    helper: "clone",
   });
-  $(".card-container").droppable({
+
+  // Make lanes droppable and handle dropping tasks
+  $(".lane").droppable({
     accept: ".card",
     drop: function (event, ui) {
-      $(this).append(ui.draggable);
+      handleDrop(event, ui);
     },
   });
 });
